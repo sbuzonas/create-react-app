@@ -19,6 +19,7 @@ const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
+const { CheckerPlugin } = require('awesome-typescript-loader');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -57,7 +58,7 @@ module.exports = {
     // Errors should be considered fatal in development
     require.resolve('react-dev-utils/crashOverlay'),
     // Finally, this is your app's code:
-    paths.appIndexJs,
+    paths.appIndexTsx,
     // We include the app code last so that if there is a runtime error during
     // initialization, it doesn't blow up the WebpackDevServer client, and
     // changing JS code would still trigger a refresh.
@@ -90,7 +91,7 @@ module.exports = {
     // We also include JSX as a common component filename extension to support
     // some tools, although we do not recommend using it, see:
     // https://github.com/facebookincubator/create-react-app/issues/290
-    extensions: ['.js', '.json', '.jsx'],
+    extensions: ['.ts', '.tsx', '.js', '.json', '.jsx'],
     alias: {
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
@@ -134,6 +135,20 @@ module.exports = {
         ],
         include: paths.appSrc,
       },
+      // Run TypeScript through tslint
+      {
+        test: /\.(ts|tsx)$/,
+        enforce: 'pre',
+        use: [
+          {
+            // @remove-on-eject-begin
+            // TODO: Point TSLint to our predefined config.
+            // @remove-on-eject-end
+            loader: 'tslint-loader',
+          },
+        ],
+        include: paths.appSrc,
+      },
       // ** ADDING/UPDATING LOADERS **
       // The "url" loader handles all assets unless explicitly excluded.
       // The `exclude` list *must* be updated with every change to loader extensions.
@@ -147,6 +162,7 @@ module.exports = {
         exclude: [
           /\.html$/,
           /\.(js|jsx)$/,
+          /\.(ts|tsx)$/,
           /\.css$/,
           /\.json$/,
           /\.bmp$/,
@@ -184,6 +200,27 @@ module.exports = {
           // It enables caching results in ./node_modules/.cache/babel-loader/
           // directory for faster rebuilds.
           cacheDirectory: true,
+        },
+      },
+      // Load TS with atl
+      {
+        test: /\.(ts|tsx)$/,
+        include: paths.appSrc,
+        loader: 'awesome-typescript-loader',
+        options: {
+          useBabel: true,
+          useCache: true,
+          cacheDirectory: path..join(paths.appNodeModules, '.cache', 'awesome-typescript-loader'),
+          babelOptions: {
+            // @remove-on-eject-begin
+            babelrc: false,
+            presets: [require.resolve('babel-preset-react-app')],
+            // @remove-on-eject-end
+          },
+          // @remove-on-eject-begin
+          compilerOptions: {
+          },
+          // @remove-on-eject-end
         },
       },
       // "postcss" loader applies autoprefixer to our CSS.
@@ -248,6 +285,9 @@ module.exports = {
     // makes the discovery automatic so you don't have to restart.
     // See https://github.com/facebookincubator/create-react-app/issues/186
     new WatchMissingNodeModulesPlugin(paths.appNodeModules),
+    // We need this plugin to detect a `--watch` mode. It may be removed later
+    // after https://github.com/webpack/webpack/issues/3460 will be resolved.
+    new CheckerPlugin(),
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.

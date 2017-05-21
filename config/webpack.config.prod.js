@@ -61,7 +61,7 @@ module.exports = {
   // You can exclude the *.map files from the build during deployment.
   devtool: 'source-map',
   // In production, we only want to load the polyfills and the app code.
-  entry: [require.resolve('./polyfills'), paths.appIndexJs],
+  entry: [require.resolve('./polyfills'), paths.appIndexTsx],
   output: {
     // The build folder.
     path: paths.appBuild,
@@ -87,7 +87,7 @@ module.exports = {
     // We also include JSX as a common component filename extension to support
     // some tools, although we do not recommend using it, see:
     // https://github.com/facebookincubator/create-react-app/issues/290
-    extensions: ['.js', '.json', '.jsx'],
+    extensions: ['.ts', '.tsx', '.js', '.json', '.jsx'],
     alias: {
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
@@ -133,6 +133,23 @@ module.exports = {
         ],
         include: paths.appSrc,
       },
+      // Run TypeScript through tslint
+      {
+        test: /\.(ts|tsx)$/,
+        enforce: 'pre',
+        use: [
+          {
+            // @remove-on-eject-begin
+            // TODO: Point TSLint to our predefined config.
+            options: {
+              typeCheck: true,
+            },
+            // @remove-on-eject-end
+            loader: 'tslint-loader',
+          },
+        ],
+        include: paths.appSrc,
+      },
       // ** ADDING/UPDATING LOADERS **
       // The "url" loader handles all assets unless explicitly excluded.
       // The `exclude` list *must* be updated with every change to loader extensions.
@@ -145,12 +162,14 @@ module.exports = {
         exclude: [
           /\.html$/,
           /\.(js|jsx)$/,
+          /\.(ts|tsx)$/,
           /\.css$/,
           /\.json$/,
           /\.bmp$/,
           /\.gif$/,
           /\.jpe?g$/,
           /\.png$/,
+          /\.svg$/,
         ],
         loader: 'file-loader',
         options: {
@@ -167,6 +186,17 @@ module.exports = {
           name: 'static/media/[name].[hash:8].[ext]',
         },
       },
+      // "svg-url" loader works like "url" loader but escapes unsafe
+      // characters and encodes as utf-8 rather than base64
+      {
+        test: [/\.svg$/],
+        loader: 'svg-url-loader',
+        options: {
+          noquotes: true,
+          limit: 2048,
+          name: 'static/media/[name].[hash:8].[ext]',
+        },
+      },
       // Process JS with Babel.
       {
         test: /\.(js|jsx)$/,
@@ -178,6 +208,20 @@ module.exports = {
           presets: [require.resolve('babel-preset-react-app')],
         },
         // @remove-on-eject-end
+      },
+      // Load TS with atl
+      {
+        test: /\.(ts|tsx)$/,
+        include: paths.appSrc,
+        loader: 'awesome-typescript-loader',
+        options: {
+          transpileOnly: false,
+          useBabel: true,
+          babelOptions: {
+            babelrc: false,
+            presets: [require.resolve('babel-preset-react-app')],
+          },
+        },
       },
       // The notation here is somewhat confusing.
       // "postcss" loader applies autoprefixer to our CSS.
