@@ -210,7 +210,7 @@ module.exports = {
         options: {
           useBabel: true,
           useCache: true,
-          cacheDirectory: path..join(paths.appNodeModules, '.cache', 'awesome-typescript-loader'),
+          cacheDirectory: path.join(paths.appNodeModules, '.cache', 'awesome-typescript-loader'),
           babelOptions: {
             // @remove-on-eject-begin
             babelrc: false,
