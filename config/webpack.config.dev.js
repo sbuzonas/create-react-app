@@ -208,6 +208,7 @@ module.exports = {
         include: paths.appSrc,
         loader: 'awesome-typescript-loader',
         options: {
+          transpileOnly: true,
           useBabel: true,
           useCache: true,
           cacheDirectory: path.join(paths.appNodeModules, '.cache', 'awesome-typescript-loader'),

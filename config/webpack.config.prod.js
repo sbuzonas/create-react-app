@@ -215,11 +215,13 @@ module.exports = {
         include: paths.appSrc,
         loader: 'awesome-typescript-loader',
         options: {
-          transpileOnly: false,
+          transpileOnly: true,
           useBabel: true,
           babelOptions: {
             babelrc: false,
             presets: [require.resolve('babel-preset-react-app')],
+          },
+          compilerOptions: {
           },
         },
       },
