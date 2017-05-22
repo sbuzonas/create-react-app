@@ -123,7 +123,7 @@ const reactScriptsLinked = fs.existsSync(reactScriptsPath) &&
 // config before publish: we're a standalone package
 if (
   !reactScriptsLinked &&
-  __dirname.indexOf(path.join('node_modules', 'react-scripts', 'config')) === -1
+    __dirname.indexOf(path.join('node_modules', '@fancyguy', 'react-scripts', 'config')) === -1
 ) {
   module.exports = {
     appPath: resolveApp('.'),
