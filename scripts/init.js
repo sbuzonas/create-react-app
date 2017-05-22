@@ -97,15 +97,19 @@ module.exports = function(
 
   let command;
   let args;
+  let devArgs;
 
   if (useYarn) {
     command = 'yarnpkg';
     args = ['add', verbose && '--verbose'].filter(e => e);
+    devArgs = ['add', '--dev', verbose && '--verbose'].filter(e => e);
   } else {
     command = 'npm';
     args = ['install', '--save', verbose && '--verbose'].filter(e => e);
+    devArgs = ['install', '--save-dev', verbose && '--verbose'].filter(e => e);
   }
   args.push('react', 'react-dom');
+    devArgs.push('tslint', 'tslint-react', 'typescript');
 
   // Install additional template dependencies, if present
   const templateDependenciesPath = path.join(
@@ -113,12 +117,27 @@ module.exports = function(
     '.template.dependencies.json'
   );
   if (fs.existsSync(templateDependenciesPath)) {
-    const templateDependencies = require(templateDependenciesPath).dependencies;
-    args = args.concat(
-      Object.keys(templateDependencies).map(key => {
-        return `${key}@${templateDependencies[key]}`;
-      })
-    );
+    let deps;
+    const templateDependencies = require(templateDependenciesPath);
+
+    if (templateDependencies.hasOwnProperty('dependencies')) {
+      deps = templateDependencies.dependencies;
+      args = args.concat(
+        Object.keys(deps).map(key => {
+          return `${key}@${deps[key]}`;
+        })
+      );
+    }
+
+    if (templateDependencies.hasOwnProperty('devDependencies')) {
+      deps = templateDependencies.devDependencies;
+      devArgs = devArgs.concat(
+        Object.keys(deps).map(key => {
+          return `${key}@${deps[key]}`;
+        })
+      );
+    }
+
     fs.unlinkSync(templateDependenciesPath);
   }
 
@@ -126,12 +145,23 @@ module.exports = function(
   // which doesn't install react and react-dom along with react-scripts
   // or template is presetend (via --internal-testing-template)
   if (!isReactInstalled(appPackage) || template) {
-    console.log(`Installing react and react-dom using ${command}...`);
+    console.log(`Installing template dependencies using ${command}...`);
     console.log();
 
     const proc = spawn.sync(command, args, { stdio: 'inherit' });
     if (proc.status !== 0) {
       console.error(`\`${command} ${args.join(' ')}\` failed`);
+      return;
+    }
+  }
+
+  if (!isTypeScriptInstalled(appPackage) || template) {
+    console.log(`Installing template dev dependencies using ${command}...`);
+    console.log();
+
+    const devProc = spawn.sync(command, devArgs, { stdio: 'inherit' });
+    if (devProc.status !== 0) {
+      console.error(`\`${command} ${devArgs.join(' ')}\` failed`);
       return;
     }
   }
@@ -195,4 +225,12 @@ function isReactInstalled(appPackage) {
 
   return typeof dependencies.react !== 'undefined' &&
     typeof dependencies['react-dom'] !== 'undefined';
+}
+
+function isTypeScriptInstalled(appPackage) {
+  const dependencies = appPackage.dependencies || {};
+
+  return typeof dependencies.typescript !== 'undefined' &&
+    typeof dependencies.tslint !== 'undefined' &&
+    typeof dependencies['tslint-react'] !== 'undefined';
 }
