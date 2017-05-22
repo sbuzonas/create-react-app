@@ -100,7 +100,7 @@ module.exports = function(
 
   if (useYarn) {
     command = 'yarnpkg';
-    args = ['add'];
+    args = ['add', verbose && '--verbose'].filter(e => e);
   } else {
     command = 'npm';
     args = ['install', '--save', verbose && '--verbose'].filter(e => e);
