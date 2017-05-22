@@ -3,7 +3,7 @@ import './App.css';
 
 import logo from './logo.svg';
 
-class App extends React.Component<{}, undefined> {
+export class App extends React.Component<{}, undefined> {
   render() {
     return (
       <div className="App">
@@ -18,5 +18,3 @@ class App extends React.Component<{}, undefined> {
     );
   }
 }
-
-export default App;
