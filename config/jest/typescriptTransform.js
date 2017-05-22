@@ -1,4 +1,3 @@
-// @remove-file-on-eject
 'use strict';
 
 const fs = require('fs-extra');
