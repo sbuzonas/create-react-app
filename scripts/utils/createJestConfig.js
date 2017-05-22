@@ -47,7 +47,6 @@ module.exports = (resolve, rootDir, isEjecting) => {
       '^react-native$': 'react-native-web',
     },
     moduleFileExtensions: ['ts', 'tsx', 'js'],
-    testRegex: '(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$',
   };
   if (rootDir) {
     config.rootDir = rootDir;
