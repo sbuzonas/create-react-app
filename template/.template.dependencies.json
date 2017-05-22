@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "@types/jest": "^19.2.3",
+    "@types/node": "^7.0.18",
+    "@types/react": "^15.0.24",
+    "@types/react-dom": "^15.5.0"
+  }
+}
