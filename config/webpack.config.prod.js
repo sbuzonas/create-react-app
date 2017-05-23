@@ -177,6 +177,7 @@ module.exports = {
           /\.html$/,
           /\.(js|jsx)$/,
           /\.(ts|tsx)$/,
+          /\.(md|markdown)$/,
           /\.css$/,
           /\.json$/,
           /\.bmp$/,
@@ -210,6 +211,16 @@ module.exports = {
           limit: 2048,
           name: 'static/media/[name].[hash:8].[ext]',
         },
+      },
+      // Load markdown as html with marked
+      {
+        test: /\.(md|markdown)$/,
+        use: [
+          require.resolve('html-loader'),
+          {
+            loader: require.resolve('markdown-loader'),
+          },
+        ]
       },
       // Process JS with Babel.
       {

@@ -200,6 +200,7 @@ module.exports = {
           name: 'static/media/[name].[hash:8].[ext]',
         },
       },
+      // Load markdown as html with marked
       {
         test: /\.(md|markdown)$/,
         use: [
