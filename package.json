@@ -1,6 +1,6 @@
 {
   "name": "@fancyguy/react-scripts",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Configuration and scripts for Create React App.",
   "repository": "sbuzonas/react-scripts",
   "license": "BSD-3-Clause",
@@ -62,7 +62,7 @@
     "react-dev-utils": "^1.0.3",
     "react-error-overlay": "^1.0.3",
     "style-loader": "0.17.0",
-    "svg-url-loader": "^2.0.2",
+    "svg-url-loader": "git+https://github.com/bhovhannes/svg-url-loader.git#4bfa851",
     "sw-precache-webpack-plugin": "0.9.1",
     "ts-jest": "^20.0.3",
     "ts-loader": "^2.0.3",
