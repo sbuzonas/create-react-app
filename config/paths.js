@@ -13,13 +13,37 @@
 const path = require('path');
 const fs = require('fs');
 const url = require('url');
+const mkdirp = require('mkdirp');
 
 // Make sure any symlinks in the project folder are resolved:
 // https://github.com/facebookincubator/create-react-app/issues/637
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
+const makeCacheDirectory = (cachePath) => {
+  const shouldFallback =
+    typeof cachePath !== 'string' && cachePath !== os.tmpdir();
+
+  let error = false;
+
+  mkdirp.sync(directory, (err) => {
+    if (shouldFallback) {
+      directory = resolveCache(os.tmpdir());
+    } else {
+      error = true;
+    }
+  });
+
+  if (error) {
+    return void 0;
+  }
+
+  return directory;
+};
+
+const resolveCache = resolver => makeCacheDirectory(resolver(getCacheDirectory(resolver('package.json'))));
 
 const envPublicUrl = process.env.PUBLIC_URL;
+const envCacheFolder = process.env.WEBPACK_CACHE_FOLDER;
 
 function ensureSlash(path, needsSlash) {
   const hasSlash = path.endsWith('/');
@@ -34,6 +58,9 @@ function ensureSlash(path, needsSlash) {
 
 const getPublicUrl = appPackageJson =>
   envPublicUrl || require(appPackageJson).homepage;
+
+const getCacheFolder = appPackageJson =>
+  envCacheFolder || require(appPackageJson).cache_folder || '.react-scripts-cache';
 
 // We use `PUBLIC_URL` environment variable or "homepage" field to infer
 // "public path" at which the app is served.
@@ -58,6 +85,7 @@ module.exports = {
   appPackageJson: resolveApp('package.json'),
   appTsconfig: resolveApp('tsconfig.json'),
   appSrc: resolveApp('src'),
+  appCache: resolveCache(resolveApp),
   yarnLockFile: resolveApp('yarn.lock'),
   testsSetup: resolveApp('src/setupTests.ts'),
   appNodeModules: resolveApp('node_modules'),
@@ -79,6 +107,7 @@ module.exports = {
   appPackageJson: resolveApp('package.json'),
   appTsconfig: resolveApp('tsconfig.json'),
   appSrc: resolveApp('src'),
+  appCache: resolveCache(resolveApp),
   yarnLockFile: resolveApp('yarn.lock'),
   testsSetup: resolveApp('src/setupTests.ts'),
   appNodeModules: resolveApp('node_modules'),
@@ -109,6 +138,7 @@ if (
     appPackageJson: resolveOwn('package.json'),
     appTsconfig: resolveOwn('template/tsconfig.json'),
     appSrc: resolveOwn('template/src'),
+    appCache: resolveCache(resolveOwn),
     yarnLockFile: resolveOwn('template/yarn.lock'),
     testsSetup: resolveOwn('template/src/setupTests.ts'),
     appNodeModules: resolveOwn('node_modules'),

@@ -223,7 +223,8 @@ module.exports = {
           // This is a feature of `babel-loader` for webpack (not Babel itself).
           // It enables caching results in ./node_modules/.cache/babel-loader/
           // directory for faster rebuilds.
-          cacheDirectory: true,
+          cacheDirectory: path.join(paths.appCache, 'babel-loader'),
+true,
         },
       },
       // Load TS with atl
@@ -234,12 +235,13 @@ module.exports = {
         options: {
           transpileOnly: true,
           useBabel: true,
-          useCache: true,
-          cacheDirectory: path.join(paths.appNodeModules, '.cache', 'awesome-typescript-loader'),
+          useCache: !!paths.appCache,
+          cacheDirectory: path.join(paths.appCache, 'awesome-typescript-loader'),
           babelOptions: {
             // @remove-on-eject-begin
             babelrc: false,
             presets: [require.resolve('babel-preset-react-app')],
+            cacheDirectory: path.join(paths.appCache, 'babel-loader'),
             // @remove-on-eject-end
           },
           // @remove-on-eject-begin
