@@ -224,7 +224,6 @@ module.exports = {
           // It enables caching results in ./node_modules/.cache/babel-loader/
           // directory for faster rebuilds.
           cacheDirectory: path.join(paths.appCache, 'babel-loader'),
-true,
         },
       },
       // Load TS with atl
