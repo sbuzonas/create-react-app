@@ -240,7 +240,6 @@ module.exports = {
             // @remove-on-eject-begin
             babelrc: false,
             presets: [require.resolve('babel-preset-react-app')],
-            cacheDirectory: path.join(paths.appCache, 'babel-loader'),
             // @remove-on-eject-end
           },
           // @remove-on-eject-begin
