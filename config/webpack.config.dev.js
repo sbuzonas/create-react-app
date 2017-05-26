@@ -233,7 +233,7 @@ true,
         include: paths.appSrc,
         loader: require.resolve('awesome-typescript-loader'),
         options: {
-          transpileOnly: true,
+          transpileOnly: false,
           useBabel: true,
           useCache: !!paths.appCache,
           cacheDirectory: path.join(paths.appCache, 'awesome-typescript-loader'),

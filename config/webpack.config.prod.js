@@ -240,7 +240,7 @@ module.exports = {
         include: paths.appSrc,
         loader: require.resolve('awesome-typescript-loader'),
         options: {
-          transpileOnly: true,
+          transpileOnly: false,
           useBabel: true,
           babelOptions: {
             babelrc: false,
