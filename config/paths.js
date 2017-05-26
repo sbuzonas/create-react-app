@@ -40,8 +40,6 @@ const makeCacheDirectory = (cachePath) => {
   return directory;
 };
 
-const resolveCache = resolver => makeCacheDirectory(resolver(getCacheDirectory(resolver('package.json'))));
-
 const envPublicUrl = process.env.PUBLIC_URL;
 const envCacheFolder = process.env.WEBPACK_CACHE_FOLDER;
 
@@ -61,6 +59,8 @@ const getPublicUrl = appPackageJson =>
 
 const getCacheFolder = appPackageJson =>
   envCacheFolder || require(appPackageJson).cache_folder || '.react-scripts-cache';
+
+const resolveCache = resolver => makeCacheDirectory(resolver(getCacheFolder(resolver('package.json'))));
 
 // We use `PUBLIC_URL` environment variable or "homepage" field to infer
 // "public path" at which the app is served.
