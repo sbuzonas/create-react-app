@@ -9,6 +9,9 @@
 # production
 /build
 
+# cache
+/.react-scripts-cache
+
 # misc
 .DS_Store
 .env.local
