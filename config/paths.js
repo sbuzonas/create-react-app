@@ -25,9 +25,9 @@ const makeCacheDirectory = (cachePath) => {
 
   let error = false;
 
-  mkdirp.sync(directory, (err) => {
+  mkdirp.sync(cachePath, (err) => {
     if (shouldFallback) {
-      directory = resolveCache(os.tmpdir());
+      cachePath = resolveCache(os.tmpdir());
     } else {
       error = true;
     }
@@ -37,7 +37,7 @@ const makeCacheDirectory = (cachePath) => {
     return void 0;
   }
 
-  return directory;
+  return cachePath;
 };
 
 const envPublicUrl = process.env.PUBLIC_URL;
