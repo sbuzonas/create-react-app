@@ -14,6 +14,7 @@ const path = require('path');
 const fs = require('fs');
 const url = require('url');
 const mkdirp = require('mkdirp');
+const os = require('os');
 
 // Make sure any symlinks in the project folder are resolved:
 // https://github.com/facebookincubator/create-react-app/issues/637
@@ -25,7 +26,7 @@ const makeCacheDirectory = (cachePath) => {
 
   let error = false;
 
-  mkdirp.sync(cachePath, (err) => {
+  mkdirp.sync(cachePath, () => {
     if (shouldFallback) {
       cachePath = resolveCache(os.tmpdir());
     } else {
