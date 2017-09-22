@@ -46,7 +46,7 @@ module.exports = (resolve, rootDir, isEjecting) => {
     moduleNameMapper: {
       '^react-native$': 'react-native-web',
     },
-    moduleFileExtensions: ['ts', 'tsx', 'js'],
+    moduleFileExtensions: ['web.ts', 'ts', 'web.tsx', 'tsx', 'web.js', 'js', 'json', 'web.jsx', 'jsx', 'node'],
   };
   if (rootDir) {
     config.rootDir = rootDir;
